@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { USERS_API } from '../api'
+import { useDebounce } from '../hooks/useDebounce'
 import { useFetch } from '../hooks/useFetch'
 import type { User } from '../types'
 
@@ -22,7 +23,9 @@ function UserListSkeleton() {
 
 export default function UserDirectory() {
   const [query, setQuery] = useState('')
-  const term = query.trim()
+  // Fetch only once typing pauses for 500 ms, not on every keystroke.
+  const debouncedQuery = useDebounce(query, 500)
+  const term = debouncedQuery.trim()
   const url = term ? `${USERS_API}?q=${encodeURIComponent(term)}` : USERS_API
   // Race safety lives in useFetch: a new term cancels the previous request.
   const { data: users, loading, error, refetch } = useFetch<User[]>(url)
@@ -42,7 +45,7 @@ export default function UserDirectory() {
   } else if (!users || users.length === 0) {
     content = (
       <p className="empty">
-        No users match “{query}”.{' '}
+        No users match “{term}”.{' '}
         <button type="button" className="link-button" onClick={() => setQuery('')}>
           Clear search
         </button>
@@ -79,6 +82,16 @@ export default function UserDirectory() {
         placeholder="Search users…"
         aria-label="Search users"
       />
+      <dl className="debounce-demo" aria-label="Search value, raw vs debounced">
+        <div>
+          <dt>Raw</dt>
+          <dd>{query ? `“${query}”` : '—'}</dd>
+        </div>
+        <div>
+          <dt>Debounced (500 ms)</dt>
+          <dd>{debouncedQuery ? `“${debouncedQuery}”` : '—'}</dd>
+        </div>
+      </dl>
       {content}
     </section>
   )
