@@ -7,5 +7,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    // List every test name, not just a per-file summary.
+    reporters: ['verbose'],
   },
 })
