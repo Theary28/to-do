@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/auth'
+import { useCart } from '../context/cart'
 
 function AuthControls() {
   const { user, signIn, signOut } = useAuth()
@@ -41,12 +42,17 @@ function AuthControls() {
 }
 
 export default function NavBar() {
+  const { itemCount } = useCart()
+
   return (
     <header className="app-header">
       <nav className="nav">
         <NavLink to="/todos">Todos</NavLink>
         <NavLink to="/users">Users</NavLink>
         <NavLink to="/shop">Shop</NavLink>
+        <NavLink to="/cart">
+          Cart{itemCount > 0 && <span className="badge">{itemCount}</span>}
+        </NavLink>
       </nav>
       <AuthControls />
     </header>

@@ -1,4 +1,5 @@
 import { PRODUCTS_API, formatPrice } from '../api'
+import { useCart } from '../context/cart'
 import { useFetch } from '../hooks/useFetch'
 import type { Product } from '../types'
 
@@ -18,6 +19,7 @@ function ProductGridSkeleton() {
 
 export default function Shop() {
   const { data: products, loading, error, refetch } = useFetch<Product[]>(`${PRODUCTS_API}?limit=6`)
+  const { dispatch } = useCart()
 
   let content
   if (loading) {
@@ -41,6 +43,9 @@ export default function Shop() {
             <img className="product-image" src={product.image} alt="" loading="lazy" />
             <span className="product-title">{product.title}</span>
             <strong>{formatPrice(product.price)}</strong>
+            <button type="button" onClick={() => dispatch({ type: 'ADD_ITEM', product })}>
+              Add to cart
+            </button>
           </li>
         ))}
       </ul>

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import NavBar from './components/NavBar'
 import TodoApp from './components/todos/TodoApp'
 import WindowWidth from './components/WindowWidth'
+import Cart from './pages/Cart'
 import Shop from './pages/Shop'
 import UserDirectory from './pages/UserDirectory'
 import UserDetail from './pages/UserDetail'
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/users" element={<UserDirectory />} />
           <Route path="/users/:id" element={<UserDetail />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
