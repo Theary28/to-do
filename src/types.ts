@@ -17,3 +17,11 @@ export type User = {
   address: { city: string }
   company: { name: string }
 }
+
+// The subset of Fake Store API's /products fields this app reads.
+export type Product = {
+  id: number
+  title: string
+  price: number
+  image: string
+}
