@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import AddTodo from './AddTodo'
 import TodoList from './TodoList'
 import FilterBar from './FilterBar'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
 import type { Filter, Todo } from '../../types'
-
-const STORAGE_KEY = 'todos'
 
 const FILTERS: Record<Filter, (todo: Todo) => boolean> = {
   all: () => true,
@@ -12,25 +11,12 @@ const FILTERS: Record<Filter, (todo: Todo) => boolean> = {
   completed: (todo) => todo.completed,
 }
 
-function loadTodos(): Todo[] {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Todo[]
-  } catch {
-    return []
-  }
-}
-
 // TodoApp is the single owner of the todos array and the active filter.
 // Children receive data via props and report changes via callbacks.
 export default function TodoApp() {
-  const [todos, setTodos] = useState(loadTodos)
+  // Persisted so todos survive navigating away and refreshing.
+  const [todos, setTodos] = useLocalStorage<Todo[]>('todos', [])
   const [filter, setFilter] = useState<Filter>('all')
-
-  // Persist so todos survive navigating to /users and back.
-  // No cleanup needed: a synchronous write leaves nothing running.
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
-  }, [todos])
 
   function addTodo(text: string) {
     setTodos((prev) => [...prev, { id: crypto.randomUUID(), text, completed: false }])

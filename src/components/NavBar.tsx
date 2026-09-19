@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/auth'
 import { useCart } from '../context/cart'
+import ThemeToggle from './ThemeToggle'
 
 function AuthControls() {
   const { user, signIn, signOut } = useAuth()
@@ -54,7 +55,10 @@ export default function NavBar() {
           Cart{itemCount > 0 && <span className="badge">{itemCount}</span>}
         </NavLink>
       </nav>
-      <AuthControls />
+      <div className="header-actions">
+        <ThemeToggle />
+        <AuthControls />
+      </div>
     </header>
   )
 }
