@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatPrice } from '../api'
+import CheckoutSummary from '../components/CheckoutSummary'
 import { useCart } from '../context/cart'
 
 export default function Cart() {
@@ -64,6 +65,7 @@ export default function Cart() {
           </li>
         ))}
       </ul>
+      <CheckoutSummary />
     </section>
   )
 }

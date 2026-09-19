@@ -475,3 +475,36 @@ a.user-row:hover {
     text-align: left;
   }
 }
+
+.summary {
+  margin-top: 1.5rem;
+  margin-left: auto;
+  max-width: 20rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.summary h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.summary dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.summary dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-total {
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--border);
+  font-weight: 600;
+}
