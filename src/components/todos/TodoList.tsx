@@ -1,10 +1,19 @@
-const EMPTY_MESSAGES = {
+import type { Filter, Todo } from '../../types'
+
+type TodoListProps = {
+  todos: Todo[]
+  filter: Filter
+  onToggle: (id: string) => void
+  onDelete: (id: string) => void
+}
+
+const EMPTY_MESSAGES: Record<Filter, string> = {
   all: 'Nothing to do yet — add your first todo above.',
   active: 'No active todos. Nice work!',
   completed: 'No completed todos yet.',
 }
 
-export default function TodoList({ todos, filter, onToggle, onDelete }) {
+export default function TodoList({ todos, filter, onToggle, onDelete }: TodoListProps) {
   if (todos.length === 0) {
     return <p className="empty">{EMPTY_MESSAGES[filter]}</p>
   }

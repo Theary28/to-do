@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getJSON } from '../api.js'
+import { getJSON } from '../api'
+import type { User } from '../types'
+
+type Result = { requestKey: string | null; users?: User[]; error?: Error }
 
 function UserListSkeleton() {
   return (
@@ -23,7 +26,7 @@ export default function UserDirectory() {
   const [reloadKey, setReloadKey] = useState(0)
   // Each result remembers which request it answers. While it doesn't match the
   // current request, we're loading — derived during render, not set in the effect.
-  const [result, setResult] = useState({ requestKey: null })
+  const [result, setResult] = useState<Result>({ requestKey: null })
 
   const term = query.trim()
   const requestKey = `${term}#${reloadKey}`
@@ -32,11 +35,11 @@ export default function UserDirectory() {
     let cancelled = false
 
     const path = term ? `/users?q=${encodeURIComponent(term)}` : '/users'
-    getJSON(path)
+    getJSON<User[]>(path)
       .then((users) => {
         if (!cancelled) setResult({ requestKey, users })
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         if (!cancelled) setResult({ requestKey, error })
       })
 
@@ -61,7 +64,7 @@ export default function UserDirectory() {
         </button>
       </div>
     )
-  } else if (users.length === 0) {
+  } else if (!users || users.length === 0) {
     content = (
       <p className="empty">
         No users match “{query}”.{' '}

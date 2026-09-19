@@ -1,9 +1,9 @@
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom'
-import TodoApp from './components/todos/TodoApp.jsx'
-import WindowWidth from './components/WindowWidth.jsx'
-import UserDirectory from './pages/UserDirectory.jsx'
-import UserDetail from './pages/UserDetail.jsx'
-import NotFound from './pages/NotFound.jsx'
+import TodoApp from './components/todos/TodoApp'
+import WindowWidth from './components/WindowWidth'
+import UserDirectory from './pages/UserDirectory'
+import UserDetail from './pages/UserDetail'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (

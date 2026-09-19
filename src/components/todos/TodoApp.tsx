@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
-import AddTodo from './AddTodo.jsx'
-import TodoList from './TodoList.jsx'
-import FilterBar from './FilterBar.jsx'
+import AddTodo from './AddTodo'
+import TodoList from './TodoList'
+import FilterBar from './FilterBar'
+import type { Filter, Todo } from '../../types'
 
 const STORAGE_KEY = 'todos'
 
-const FILTERS = {
+const FILTERS: Record<Filter, (todo: Todo) => boolean> = {
   all: () => true,
   active: (todo) => !todo.completed,
   completed: (todo) => todo.completed,
 }
 
-function loadTodos() {
+function loadTodos(): Todo[] {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? []
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Todo[]
   } catch {
     return []
   }
@@ -23,7 +24,7 @@ function loadTodos() {
 // Children receive data via props and report changes via callbacks.
 export default function TodoApp() {
   const [todos, setTodos] = useState(loadTodos)
-  const [filter, setFilter] = useState('all')
+  const [filter, setFilter] = useState<Filter>('all')
 
   // Persist so todos survive navigating to /users and back.
   // No cleanup needed: a synchronous write leaves nothing running.
@@ -31,17 +32,17 @@ export default function TodoApp() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
   }, [todos])
 
-  function addTodo(text) {
+  function addTodo(text: string) {
     setTodos((prev) => [...prev, { id: crypto.randomUUID(), text, completed: false }])
   }
 
-  function toggleTodo(id) {
+  function toggleTodo(id: string) {
     setTodos((prev) =>
       prev.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)),
     )
   }
 
-  function deleteTodo(id) {
+  function deleteTodo(id: string) {
     setTodos((prev) => prev.filter((todo) => todo.id !== id))
   }
 

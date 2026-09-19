@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 
-export default function AddTodo({ onAdd }) {
+type AddTodoProps = {
+  onAdd: (text: string) => void
+}
+
+export default function AddTodo({ onAdd }: AddTodoProps) {
   // Only the in-progress input text lives here; the list itself belongs to TodoApp.
   const [text, setText] = useState('')
 
-  function handleSubmit(event) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const trimmed = text.trim()
     if (!trimmed) return

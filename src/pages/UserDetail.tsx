@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getJSON } from '../api.js'
+import { HttpError, getJSON } from '../api'
+import type { User } from '../types'
+
+type Result = { id: string | null; user?: User; error?: Error }
 
 export default function UserDetail() {
-  const { id } = useParams()
+  const { id = '' } = useParams()
   // The result records which id it belongs to; a mismatch with the URL means loading.
-  const [result, setResult] = useState({ id: null })
+  const [result, setResult] = useState<Result>({ id: null })
 
   useEffect(() => {
     let cancelled = false
 
-    getJSON(`/users/${encodeURIComponent(id)}`)
+    getJSON<User>(`/users/${encodeURIComponent(id)}`)
       .then((user) => {
         if (!cancelled) setResult({ id, user })
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         if (!cancelled) setResult({ id, error })
       })
 
@@ -36,7 +39,7 @@ export default function UserDetail() {
         <span className="skeleton skeleton-line short" />
       </div>
     )
-  } else if (error?.status === 404) {
+  } else if (error instanceof HttpError && error.status === 404) {
     content = <p className="empty">No user with id “{id}”.</p>
   } else if (error) {
     content = (
@@ -44,7 +47,7 @@ export default function UserDetail() {
         Couldn&apos;t load user: {error.message}
       </p>
     )
-  } else {
+  } else if (user) {
     content = (
       <>
         <h1>{user.name}</h1>

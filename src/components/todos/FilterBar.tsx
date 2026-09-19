@@ -1,4 +1,14 @@
-const FILTER_OPTIONS = [
+import type { Filter } from '../../types'
+
+type FilterBarProps = {
+  filter: Filter
+  onFilterChange: (filter: Filter) => void
+  activeCount: number
+  completedCount: number
+  onClearCompleted: () => void
+}
+
+const FILTER_OPTIONS: { value: Filter; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'active', label: 'Active' },
   { value: 'completed', label: 'Completed' },
@@ -10,7 +20,7 @@ export default function FilterBar({
   activeCount,
   completedCount,
   onClearCompleted,
-}) {
+}: FilterBarProps) {
   return (
     <div className="filter-bar">
       <span className="count">
