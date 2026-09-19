@@ -1,4 +1,5 @@
-import { Navigate, NavLink, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import NavBar from './components/NavBar'
 import TodoApp from './components/todos/TodoApp'
 import WindowWidth from './components/WindowWidth'
 import Shop from './pages/Shop'
@@ -9,14 +10,7 @@ import NotFound from './pages/NotFound'
 export default function App() {
   return (
     <div className="app">
-      <header className="app-header">
-        <nav className="nav">
-          <NavLink to="/todos">Todos</NavLink>
-          <NavLink to="/users">Users</NavLink>
-          <NavLink to="/shop">Shop</NavLink>
-        </nav>
-        <WindowWidth />
-      </header>
+      <NavBar />
 
       <main className="app-main">
         <Routes>
@@ -28,6 +22,10 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+
+      <footer className="app-footer">
+        <WindowWidth />
+      </footer>
     </div>
   )
 }
