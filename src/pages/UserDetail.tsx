@@ -1,37 +1,15 @@
-import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { HttpError, getJSON } from '../api'
+import { USERS_API } from '../api'
+import { NOT_FOUND_ERROR, useFetch } from '../hooks/useFetch'
 import type { User } from '../types'
-
-type Result = { id: string | null; user?: User; error?: Error }
 
 export default function UserDetail() {
   const { id = '' } = useParams()
-  // The result records which id it belongs to; a mismatch with the URL means loading.
-  const [result, setResult] = useState<Result>({ id: null })
-
-  useEffect(() => {
-    let cancelled = false
-
-    getJSON<User>(`/users/${encodeURIComponent(id)}`)
-      .then((user) => {
-        if (!cancelled) setResult({ id, user })
-      })
-      .catch((error: Error) => {
-        if (!cancelled) setResult({ id, error })
-      })
-
-    // Cleanup: if :id changes or we navigate away mid-request, ignore the old
-    // response so user 1's data can never land on user 2's page.
-    return () => {
-      cancelled = true
-    }
-  }, [id])
-
-  const { user, error } = result
+  // Switching :id mid-request cancels the old fetch inside useFetch.
+  const { data: user, loading, error } = useFetch<User>(`${USERS_API}/${encodeURIComponent(id)}`)
 
   let content
-  if (result.id !== id) {
+  if (loading) {
     content = (
       <div aria-busy="true" aria-label="Loading user">
         <span className="skeleton skeleton-title" />
@@ -39,12 +17,12 @@ export default function UserDetail() {
         <span className="skeleton skeleton-line short" />
       </div>
     )
-  } else if (error instanceof HttpError && error.status === 404) {
+  } else if (error === NOT_FOUND_ERROR) {
     content = <p className="empty">No user with id “{id}”.</p>
   } else if (error) {
     content = (
       <p className="error" role="alert">
-        Couldn&apos;t load user: {error.message}
+        Couldn&apos;t load user: {error}
       </p>
     )
   } else if (user) {
